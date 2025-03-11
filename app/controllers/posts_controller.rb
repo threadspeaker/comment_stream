@@ -18,14 +18,19 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.build(post_params)
-
-    respond_to do |format|
-      if @post.save
-        format.turbo_stream
-        format.html { redirect_to @post, notice: "Post was successfully created." }
-      else
-        format.html { render :new, status: :unprocessable_entity }
+  
+    if @post.save
+      # For Turbo Stream requests, send a redirect header
+      if turbo_stream_request?
+        request.format = :html
+        redirect_to @post, notice: "Post was successfully created."
+        return
       end
+      
+      # For HTML requests
+      redirect_to @post, notice: "Post was successfully created."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -35,8 +40,15 @@ class PostsController < ApplicationController
   def update
     respond_to do |format|
       if @post.update(post_params)
-        format.turbo_stream
-        format.html { redirect_to @post, notice: "Post was successfully updated." }
+        # For Turbo Stream requests, send a redirect header
+        if turbo_stream_request?
+          request.format = :html
+          redirect_to @post, notice: "Post was successfully updated."
+          return
+        end
+        
+        # For HTML requests
+        redirect_to @post, notice: "Post was successfully updated."
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -46,13 +58,20 @@ class PostsController < ApplicationController
   def destroy
     @post.destroy
     
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to posts_path, notice: "Post was successfully deleted." }
+    if turbo_stream_request?
+      request.format = :html
+      redirect_to posts_path, notice: "Post was successfully deleted."
+      return
     end
+    
+    redirect_to posts_path, notice: "Post was successfully deleted."
   end
 
   private
+
+  def turbo_stream_request?
+    request.format.symbol == :turbo_stream
+  end
 
   def set_post
     @post = Post.find(params[:id])
