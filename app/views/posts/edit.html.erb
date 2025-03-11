@@ -1,13 +1,11 @@
-<div class="container mx-auto px-4 py-6">
-  <div class="mb-6">
-    <%= link_to "← Back to Post", @post, class: "text-blue-500 hover:underline" %>
+<div class="post__container">
+  <div class="post__back-link">
+    <%= link_to "← Back to Post", @post, class: "button button--secondary" %>
   </div>
-  
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
-    <div class="p-6">
-      <h1 class="text-2xl font-bold mb-6">Edit Post</h1>
-      
-      <%= render "form", post: @post %>
-    </div>
+
+  <div class="post__content">
+    <h1 class="post__header-title">Edit Post</h1>
+
+    <%= render "form", post: @post %>
   </div>
 </div>

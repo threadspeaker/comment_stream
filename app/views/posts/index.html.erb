@@ -1,29 +1,29 @@
-<div class="container mx-auto px-4 py-6">
-  <%= turbo_stream_from "posts" %>
-
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">All Posts</h1>
-    <% if current_user %>
-      <div class="flex items-center gap-4">
-        <%= link_to "New Post", new_post_path, class: "bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded" %>
-        <%= button_to "Log Out", session_path, method: :delete, class: "bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" %>
-      </div>
-    <% else %>
-      <%= link_to "Sign In", root_path, class: "bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" %>
-    <% end %>
-  </div>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="posts">
-    <% @posts.each do |post| %>
-      <%= render partial: "posts/post", locals: { post: post } %>
-    <% end %>
-  </div>
-  
-  <% if @posts.empty? %>
-    <div class="text-center py-10">
-      <p class="text-lg text-gray-600">No posts yet. Be the first to create one!</p>
+<div class="posts__container">
+  <div class="posts__header">
+    <h1 class="posts__header-title">All Posts</h1>
+    
+    <div class="posts__header-actions">
       <% if current_user %>
-        <%= link_to "Create Post", new_post_path, class: "mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" %>
+        <%= link_to "New Post", new_post_path, class: "button button--primary" %>
+        <%= button_to "Log Out", session_path, method: :delete, class: "button button--danger" %>
+      <% else %>
+        <%= link_to "Sign In", root_path, class: "button button--primary" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <% if @posts.any? %>
+    <div class="posts__grid">
+      <% @posts.each do |post| %>
+        <%= render partial: "post", locals: { post: post } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="posts__empty">
+      <p class="posts__empty-message">No posts yet. Be the first to create one!</p>
+      
+      <% if current_user %>
+        <%= link_to "Create Post", new_post_path, class: "button button--primary" %>
       <% end %>
     </div>
   <% end %>

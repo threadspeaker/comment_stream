@@ -1,4 +1,3 @@
-# app/controllers/posts_controller.rb
 class PostsController < ApplicationController
   before_action :require_login, except: [:index, :show]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
@@ -20,10 +19,13 @@ class PostsController < ApplicationController
   def create
     @post = current_user.posts.build(post_params)
 
-    if @post.save
-      redirect_to @post, notice: "Post was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @post.save
+        format.turbo_stream
+        format.html { redirect_to @post, notice: "Post was successfully created." }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -31,16 +33,23 @@ class PostsController < ApplicationController
   end
 
   def update
-    if @post.update(post_params)
-      redirect_to @post, notice: "Post was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @post.update(post_params)
+        format.turbo_stream
+        format.html { redirect_to @post, notice: "Post was successfully updated." }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @post.destroy
-    redirect_to posts_path, notice: "Post was successfully deleted."
+    
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to posts_path, notice: "Post was successfully deleted." }
+    end
   end
 
   private
