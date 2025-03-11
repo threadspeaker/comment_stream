@@ -1,5 +1,5 @@
 <%= turbo_frame_tag dom_id(comment) do %>
-  <li class="comment" id="<%= dom_id(comment) %>">
+  <div class="comment" id="<%= dom_id(comment) %>">
     <div class="comment__header">
       <div class="comment__header-author"><%= comment.user.name %></div>
       <div class="comment__header-date"><%= time_ago_in_words(comment.created_at) %> ago</div>
@@ -47,5 +47,5 @@
         </div>
       </div>
     <% end %>
-  </li>
+  </div>
 <% end %>
