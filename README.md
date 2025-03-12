@@ -11,4 +11,4 @@
 - Use Turbo Frames for comment rendering and inline editing.
 
 ## Additional Challenge
-- Implement a "like" button for each comment that updates the like count live using Hotwire.
+- Implement a "like" button for each comment that updates the like count live using Hotwire. (Not done)
